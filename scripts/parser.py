@@ -101,52 +101,6 @@ def parse_suip_biz(url, act, proxies):
     return subdomains_list
 
 
-# ======================================================================================================================
-
-
-def parse_suip_biz(url, act):
-    """
-    Parses the given URL based on the action ('findomain' or 'subfinder') from suip.biz.
-
-    Args:
-    url (str): URL to be parsed.
-    act (str): Action type, 'findomain' or 'subfinder'.
-
-    Returns:
-    list: A list of parsed subdomains formatted with 'http://', or an error code (1).
-    """
-    params = {
-        'act': act,
-    }
-    files = {
-        'url': (None, url),
-        'Submit1': (None, 'Submit'),
-    }
-
-    try:
-        response = requests.post('https://suip.biz/', params=params, files=files)
-    except requests.exceptions.RequestException:
-        return 1
-
-    soup = BeautifulSoup(response.text, "html.parser")
-    raw_list = soup.find("pre").text
-
-    subdomains_list = []
-    match act:
-        case "findomain":
-            search_marker_index = raw_list.rfind('🔍')
-            job_marker_index = raw_list.rfind('Job')
-            filtered_text = raw_list[search_marker_index + 1:job_marker_index]
-            subdomains_list = filtered_text.split("\n")[3:-2]
-        case "subfinder":
-            subdomains_list = raw_list.split("\n")[:-1]
-
-    # removing any empty entries
-    subdomains_list = [f"{sub.strip()}" for sub in subdomains_list if sub.strip()]
-
-    return subdomains_list
-
-
 def get_subdomains(url: str) -> Union[List[str], int]:
     """
     Retrieves subdomains for a given URL either from a database or by making HTTP requests.
@@ -175,7 +129,7 @@ def get_subdomains(url: str) -> Union[List[str], int]:
 
 
 if __name__ == '__main__':
-    # print(parse_suip_biz("sw-dev.io", "findomain"))
-    # print(parse_suip_biz("sw-dev.io", "subfinder"))
+    # print(parse_suip_biz("Layerzero.network", "findomain"))
+    # print(parse_suip_biz("Layerzero.network", "subfinder"))
     # print(load_proxies())
     ...

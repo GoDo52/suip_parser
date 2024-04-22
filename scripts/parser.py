@@ -1,5 +1,4 @@
 import requests
-import cfscrape
 
 from bs4 import BeautifulSoup
 
@@ -70,7 +69,6 @@ def parse_suip_biz(url, act, proxies):
     Returns:
     list: A list of parsed subdomains formatted with 'http://', or an error code (1).
     """
-    scraper = cfscrape.create_scraper()
     params = {
         'act': act,
     }
@@ -88,7 +86,7 @@ def parse_suip_biz(url, act, proxies):
     }
 
     try:
-        response = scraper.post('https://suip.biz/', params=params, files=files, proxies=proxy, headers=headers)
+        response = requests.post('https://suip.biz/', params=params, files=files, proxies=proxy, headers=headers)
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return 1

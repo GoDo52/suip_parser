@@ -1,5 +1,3 @@
-from bot.setup import bot
-
 import telebot.types
 
 from database.db import Domain

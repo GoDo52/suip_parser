@@ -85,12 +85,15 @@ def check_domains():
             markup_reply, markup_text = subdomains_menu_markup(domain_name=domain.domain,
                                                                subdomains_list=new_subdomains, new=True)
             for admin in ADMIN_ID_LIST:
-                bot.send_message(
-                    chat_id=admin,
-                    text=markup_text,
-                    reply_markup=markup_reply,
-                    parse_mode='html'
-                )
+                try:
+                    bot.send_message(
+                        chat_id=admin,
+                        text=markup_text,
+                        reply_markup=markup_reply,
+                        parse_mode='html'
+                    )
+                except Exception as e:
+                    print(f"ot able to reach Admin (blocked the bot, or not known: {e}")
 
 
 # ======================================================================================================================

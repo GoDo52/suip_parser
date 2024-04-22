@@ -78,7 +78,8 @@ def parse_suip_biz(url, act, proxies):
         'url': (None, url),
         'Submit1': (None, 'Submit'),
     }
-    proxy = {'http': choice(proxies)}
+    proxy = choice(proxies)
+    proxy = {'http': proxy, 'https': proxy}
     headers = {
         "User-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36",
         'Accept': 'application/json',
@@ -139,6 +140,6 @@ def get_subdomains(url: str) -> Union[List[str], int]:
 if __name__ == '__main__':
     # print(parse_suip_biz("Layerzero.network", "findomain", load_proxies()))
     # print(parse_suip_biz("Layerzero.network", "subfinder", load_proxies()))
-    # print(get_subdomains("Layerzero.network"))
+    print(get_subdomains("Layerzero.network"))
     # print(load_proxies())
     ...

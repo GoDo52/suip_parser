@@ -77,9 +77,12 @@ def parse_suip_biz(url, act, proxies):
         'Submit1': (None, 'Submit'),
     }
     proxy = {'http': choice(proxies)}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+    }
 
     try:
-        response = requests.post('https://suip.biz/', params=params, files=files, proxies=proxy)
+        response = requests.post('https://suip.biz/', params=params, files=files, proxies=proxy, headers=headers)
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return 1

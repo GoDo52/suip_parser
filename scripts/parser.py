@@ -113,8 +113,8 @@ def get_subdomains(url: str) -> Union[List[str], int]:
     """
     try:
         normalized_url = url.removeprefix("http://").removeprefix("https://")
-        first_subdomains_list = parse_suip_biz(normalized_url, "findomain")
-        second_subdomains_list = parse_suip_biz(normalized_url, "subfinder")
+        first_subdomains_list = parse_suip_biz(normalized_url, "findomain", load_proxies())
+        second_subdomains_list = parse_suip_biz(normalized_url, "subfinder", load_proxies())
 
         subdomains_list = list(set(first_subdomains_list + second_subdomains_list))
 
@@ -129,7 +129,7 @@ def get_subdomains(url: str) -> Union[List[str], int]:
 
 
 if __name__ == '__main__':
-    # print(parse_suip_biz("Layerzero.network", "findomain"))
-    # print(parse_suip_biz("Layerzero.network", "subfinder"))
+    print(parse_suip_biz("Layerzero.network", "findomain", load_proxies()))
+    print(parse_suip_biz("Layerzero.network", "subfinder", load_proxies()))
     # print(load_proxies())
     ...

@@ -1,4 +1,5 @@
 import requests
+import cfscrape
 
 from bs4 import BeautifulSoup
 
@@ -69,6 +70,7 @@ def parse_suip_biz(url, act, proxies):
     Returns:
     list: A list of parsed subdomains formatted with 'http://', or an error code (1).
     """
+    scraper = cfscrape.create_scraper()
     params = {
         'act': act,
     }
@@ -78,14 +80,14 @@ def parse_suip_biz(url, act, proxies):
     }
     proxy = {'http': choice(proxies)}
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Safari/605.1.15',
+        "User-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36",
         'Accept': 'application/json',
         'Connection': 'keep-alive',
         'Accept-Encoding': 'gzip, deflate, br'
     }
 
     try:
-        response = requests.post('https://suip.biz/', params=params, files=files, proxies=proxy, headers=headers)
+        response = scraper.post('https://suip.biz/', params=params, files=files, proxies=proxy, headers=headers)
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return 1
@@ -137,5 +139,6 @@ def get_subdomains(url: str) -> Union[List[str], int]:
 if __name__ == '__main__':
     # print(parse_suip_biz("Layerzero.network", "findomain", load_proxies()))
     # print(parse_suip_biz("Layerzero.network", "subfinder", load_proxies()))
+    # print(get_subdomains("Layerzero.network"))
     # print(load_proxies())
     ...

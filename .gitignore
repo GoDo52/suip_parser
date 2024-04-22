@@ -5,6 +5,6 @@ venv/
 database/database.db
 .env
 
-desktop.ini
-
 README.md
+
+scripts/proxy.txt

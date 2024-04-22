@@ -7,7 +7,7 @@ from handlers.markups import *
 
 from database.db import Domain, get_all_domains
 
-from scripts.parser import get_subdomains, validate_domain_name
+from scripts.parser import get_subdomains
 
 from config import ADMIN_ID_LIST
 
@@ -131,13 +131,9 @@ def add_domain_text_logic(message, inline: bool = False):
 
 def add_domain(message, inline: bool = False):
     domain_name = message.text.removeprefix('https://').removeprefix('http://')
-    if validate_domain_name(domain=domain_name):
-        domain = Domain(domain_name)
-        bot_message(message, add_domain_markup(domain_name=domain.domain), inline)
-        bot_message(message, start_menu_markup(), inline)
-    else:
-        bot_message(message, add_domain_markup(error=True), inline)
-        start_menu_logic(message, inline)
+    domain = Domain(domain_name)
+    bot_message(message, add_domain_markup(domain_name=domain.domain), inline)
+    bot_message(message, start_menu_markup(), inline)
 
 
 def delete_domain_logic(message, domain_name: str, inline: bool = False):

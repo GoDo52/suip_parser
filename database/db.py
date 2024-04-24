@@ -117,7 +117,7 @@ class Domain:
             c.executemany("INSERT INTO subdomains (domain, subdomain) VALUES (?, ?)",
                           [(self.domain, subdomain) for subdomain in subdomains])
             conn.commit()
-            return False, None
+            return True, subdomains
 
         new_subdomains_set = set(subdomains)
         if existing_subdomains == new_subdomains_set:

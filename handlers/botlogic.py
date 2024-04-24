@@ -42,7 +42,8 @@ def bot_message(message, markup, inline: bool = False):
             message_id=message.id,
             text=markup_text,
             reply_markup=markup_reply,
-            parse_mode='html'
+            parse_mode='html',
+            disable_web_page_preview=True
         )
     else:
         if text_length > 4090:
@@ -53,21 +54,24 @@ def bot_message(message, markup, inline: bool = False):
                         chat_id=message.chat.id,
                         text=chunk,
                         reply_markup=markup_reply,
-                        parse_mode='html'
+                        parse_mode='html',
+                        disable_web_page_preview=True
                     )
                 else:
                     bot.send_message(
                         chat_id=message.chat.id,
                         text=chunk,
                         reply_markup=None,
-                        parse_mode='html'
+                        parse_mode='html',
+                        disable_web_page_preview=True
                     )
         else:
             bot.send_message(
                 chat_id=message.chat.id,
                 text=markup_text,
                 reply_markup=markup_reply,
-                parse_mode='html'
+                parse_mode='html',
+                disable_web_page_preview=True
             )
 
 
@@ -90,10 +94,11 @@ def check_domains():
                         chat_id=admin,
                         text=markup_text,
                         reply_markup=markup_reply,
-                        parse_mode='html'
+                        parse_mode='html',
+                        disable_web_page_preview=True
                     )
                 except Exception as e:
-                    print(f"ot able to reach Admin (blocked the bot, or not known: {e}")
+                    print(f"Not able to reach Admin (blocked the bot, or not known: {e}")
         else:
             print(f"No difference in subdomains for {domain.domain}")
 

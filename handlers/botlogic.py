@@ -94,6 +94,8 @@ def check_domains():
                     )
                 except Exception as e:
                     print(f"ot able to reach Admin (blocked the bot, or not known: {e}")
+        else:
+            print(f"No difference in subdomains for {domain.domain}")
 
 
 # ======================================================================================================================

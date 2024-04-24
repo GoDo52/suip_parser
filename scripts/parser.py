@@ -44,7 +44,7 @@ def status_code_checker(domain: str) -> int | None:
 def load_proxies():
     proxies = []
     try:
-        with open('proxy.txt', 'r') as file:
+        with open('scripts/proxy.txt', 'r') as file:
             for line in file:
                 line = line.strip()
                 if line:

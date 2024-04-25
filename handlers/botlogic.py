@@ -124,7 +124,7 @@ def subdomains_menu_logic(message, domain_name: str, inline: bool = False):
         bot_message(
             message,
             subdomains_menu_markup(domain_name=domain.domain, subdomains_list=new_subdomains, new=True),
-            inline
+            inline=False
         )
 
 

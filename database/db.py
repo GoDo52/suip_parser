@@ -36,8 +36,7 @@ def init_db(conn, force: bool = False):
         CREATE TABLE IF NOT EXISTS subdomains (
             id INTEGER PRIMARY KEY,
             domain TEXT,
-            subdomain TEXT,
-            FOREIGN KEY (domain) REFERENCES domains(domain)
+            subdomain TEXT
         )
     """)
 

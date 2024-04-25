@@ -95,6 +95,7 @@ class Domain:
     def delete_domain(self, conn):
         c = conn.cursor()
         c.execute("DELETE FROM domains WHERE domain = ?", (self.domain, ))
+        c.execute("DELETE FROM subdomains WHERE domain = ?", (self.domain, ))
         conn.commit()
 
     @_ensure_connection
@@ -117,7 +118,7 @@ class Domain:
             c.executemany("INSERT INTO subdomains (domain, subdomain) VALUES (?, ?)",
                           [(self.domain, subdomain) for subdomain in subdomains])
             conn.commit()
-            return True, set(subdomains)
+            return True, subdomains
 
         new_subdomains_set = set(subdomains)
         if existing_subdomains == new_subdomains_set:

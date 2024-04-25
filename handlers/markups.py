@@ -38,7 +38,7 @@ def domains_menu_markup(domains_list: list = None):
 
 
 # TODO: show statuses
-def subdomains_menu_markup(domain_name: str, subdomains_list: list = None, new: bool = False):
+def subdomains_menu_markup(domain_name: str, subdomains_list: list | set, new: bool = False):
     text = f"Сабдомены {domain_name}:\n"
     markup = telebot.types.InlineKeyboardMarkup()
 
@@ -49,8 +49,6 @@ def subdomains_menu_markup(domain_name: str, subdomains_list: list = None, new: 
         for i in subdomains_list:
             status_code = status_code_checker(domain=i)
             text += f"http://{i} | {status_code} \n"
-    else:
-        text = "Сабдомены"
 
     markup.add(telebot.types.InlineKeyboardButton("Назад", callback_data='domains_menu'))
     return markup, text

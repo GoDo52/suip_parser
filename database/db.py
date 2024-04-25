@@ -107,7 +107,7 @@ class Domain:
         conn.commit()
 
     @_ensure_connection
-    def add_subdomains(self, conn, subdomains: list) -> tuple[bool, set or None]:
+    def add_subdomains(self, conn, subdomains: set) -> tuple[bool, set or None]:
         c = conn.cursor()
         c.execute("SELECT subdomain FROM subdomains WHERE domain = ?", (self.domain,))
         existing_subdomains = {row[0] for row in c.fetchall()}

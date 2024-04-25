@@ -108,7 +108,7 @@ def parse_suip_biz(url, act, proxies):
     return subdomains_list
 
 
-def get_subdomains(url: str) -> Union[List[str], int]:
+def get_subdomains(url: str):
     """
     Retrieves subdomains for a given URL either from a database or by making HTTP requests.
 
@@ -123,7 +123,7 @@ def get_subdomains(url: str) -> Union[List[str], int]:
         first_subdomains_list = parse_suip_biz(normalized_url, "findomain", load_proxies())
         second_subdomains_list = parse_suip_biz(normalized_url, "subfinder", load_proxies())
 
-        subdomains_list = list(set(first_subdomains_list + second_subdomains_list))
+        subdomains_list = set(first_subdomains_list + second_subdomains_list)
 
         return subdomains_list
 

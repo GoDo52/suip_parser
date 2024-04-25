@@ -119,7 +119,7 @@ class Domain:
             conn.commit()
             return True, subdomains
 
-        new_subdomains_set = set(subdomains)
+        new_subdomains_set = subdomains
         print(subdomains)
         if existing_subdomains == new_subdomains_set:
             return False, None
@@ -132,8 +132,7 @@ class Domain:
             c.executemany("INSERT INTO subdomains (domain, subdomain) VALUES (?, ?)",
                           [(self.domain, subdomain) for subdomain in subdomains_to_add])
             conn.commit()
-
-        return True, subdomains_to_add
+            return True, subdomains_to_add
 
 
 # ======================================================================================================================

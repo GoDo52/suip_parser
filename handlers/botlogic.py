@@ -84,9 +84,8 @@ def check_domains():
     for domain_name in domains:
         domain = Domain(domain=domain_name[0])
         subdomains_list = get_subdomains(url=domain.domain)
-        print(subdomains_list)
         subdomains_update_status, new_subdomains = domain.add_subdomains(subdomains=subdomains_list)
-        print(subdomains_list)
+        print(f"{domain.domain}: new - {subdomains_update_status}, new_subdomains - {new_subdomains}")
         if subdomains_update_status:
             markup_reply, markup_text = subdomains_menu_markup(domain_name=domain.domain,
                                                                subdomains_list=new_subdomains, new=True)

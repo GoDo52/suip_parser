@@ -25,8 +25,11 @@ def load_proxies():
     proxies = Proxy().proxies_list
     proxies_final = []
     for i in proxies:
-        ip, port, username, password = i[0].split(':')
-        proxies_final.append(f"http://{username}:{password}@{ip}:{port}")
+        try:
+            ip, port, username, password = i[0].split(':')
+            proxies_final.append(f"http://{username}:{password}@{ip}:{port}")
+        except Exception as e:
+            print(f"Error in loading proxy: {i}, with error: {e}")
     return proxies_final
 
 
@@ -35,12 +38,16 @@ def check_proxies():
     proxies_final_good = []
     proxies_final_bad = []
     for i in proxies:
-        ip, port, username, password = i[0].split(':')
-        proxy = f"http://{username}:{password}@{ip}:{port}"
-        if is_proxy_working(proxy):
-            proxies_final_good.append(i[0])
-        else:
+        try:
+            ip, port, username, password = i[0].split(':')
+            proxy = f"http://{username}:{password}@{ip}:{port}"
+            if is_proxy_working(proxy):
+                proxies_final_good.append(i[0])
+            else:
+                proxies_final_bad.append(i[0])
+        except Exception as e:
             proxies_final_bad.append(i[0])
+            print(f"Error in checking proxy: {i}, with error: {e}")
     return proxies_final_good, proxies_final_bad
 
 

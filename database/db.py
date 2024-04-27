@@ -160,8 +160,8 @@ class Proxy:
     def add_proxy(self, conn, proxy: str | list):
         c = conn.cursor()
         if type(proxy) is list:
-            c.executemany("INSERT INTO proxies (proxy) VALUES (?)",
-                          [prxy for prxy in proxy])
+            for i in proxy:
+                c.execute("INSERT INTO proxies (proxy) VALUES (?)", (i, ))
             conn.commit()
             return True
         elif type(proxy) is str:

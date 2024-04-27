@@ -169,7 +169,7 @@ def add_proxy_text_logic(message, inline: bool = False):
 
 
 def add_proxy(message, inline: bool = False):
-    proxy_list = message.text.strip('\n')
+    proxy_list = message.text.split('\n')
     proxy = Proxy()
     proxy.add_proxy(proxy=proxy_list)
     bot_message(message, add_proxy_markup(), inline)

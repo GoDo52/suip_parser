@@ -40,6 +40,13 @@ def init_db(conn, force: bool = False):
         )
     """)
 
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS proxies (
+            id INTEGER PRIMARY KEY,
+            proxy TEXT
+        )
+    """)
+
 
 # ======================================================================================================================
 
@@ -132,6 +139,44 @@ class Domain:
             conn.commit()
             return True, subdomains_to_add
         return False, None
+
+
+class Proxy:
+    @staticmethod
+    def _ensure_connection(func):
+        def inner(self, *args, **kwargs):
+            db_file_path = os.path.join(os.path.dirname(__file__), 'DataBase.db')
+            with sqlite3.connect(db_file_path) as conn:
+                return func(self, conn, *args, **kwargs)
+
+        return inner
+
+    @_ensure_connection
+    def __init__(self, conn):
+        c = conn.cursor()
+        self.proxies_list = c.execute("SELECT proxy FROM proxies").fetchall()
+
+    @_ensure_connection
+    def add_proxy(self, conn, proxy: str | list):
+        c = conn.cursor()
+        if type(proxy) is list:
+            c.executemany("INSERT INTO proxies (proxy) VALUES (?)",
+                          [prxy for prxy in proxy])
+            conn.commit()
+            return True
+        elif type(proxy) is str:
+            c.execute("INSERT INTO proxies (proxy) VALUES (?)", (proxy, ))
+            conn.commit()
+            return True
+        else:
+            return False
+
+    @_ensure_connection
+    def delete_proxy(self, conn, proxy):
+        c = conn.cursor()
+        print(proxy)
+        c.execute("DELETE FROM proxies WHERE proxy = ?", (proxy, ))
+        conn.commit()
 
 
 # ======================================================================================================================

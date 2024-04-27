@@ -5,7 +5,7 @@ from threading import Thread
 
 from handlers.markups import *
 
-from database.db import Domain, get_all_domains
+from database.db import Domain, get_all_domains, Proxy
 
 from scripts.parser import get_subdomains
 
@@ -154,3 +154,29 @@ def update_domain_status_logic(message, domain_name: str, inline: bool = False):
     domain = Domain(domain_name)
     domain.change_domain_status()
     domains_menu_logic(message, inline)
+
+
+# ======================================================================================================================
+
+
+def proxies_menu_logic(message, inline: bool = False):
+    bot_message(message, proxies_menu_markup(), inline)
+
+
+def add_proxy_text_logic(message, inline: bool = False):
+    bot_message(message, add_proxy_text_markup(), inline)
+    bot.register_next_step_handler(message, add_proxy)
+
+
+def add_proxy(message, inline: bool = False):
+    proxy_list = message.text.strip('\n')
+    proxy = Proxy()
+    proxy.add_proxy(proxy=proxy_list)
+    bot_message(message, add_proxy_markup(), inline)
+    bot_message(message, start_menu_markup(), inline)
+
+
+def delete_proxy_logic(message, proxy_name: str, inline: bool = False):
+    proxy = Proxy()
+    proxy.delete_proxy(proxy=proxy_name)
+    proxies_menu_logic(message, inline)

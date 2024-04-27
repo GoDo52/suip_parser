@@ -36,6 +36,13 @@ def callback_logic(call):
         update_domain_status_logic(message=call.message, domain_name=domain_name, inline=True)
     elif call.data == 'add_domain':
         add_domain_text_logic(message=call.message, inline=True)
+    elif call.data == 'proxies':
+        proxies_menu_logic(message=call.message, inline=True)
+    elif call.data == 'add_proxy':
+        add_proxy_text_logic(message=call.message, inline=True)
+    elif call.data.startswith("delete_proxy_"):
+        proxy_name = call.data.split('_')[-1]
+        delete_proxy_logic(message=call.message, proxy_name=proxy_name, inline=True)
 
 
 # --------------- main name -------------------

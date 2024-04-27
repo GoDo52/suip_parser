@@ -4,27 +4,10 @@ from bs4 import BeautifulSoup
 
 from random import choice
 
-from typing import List, Union
-
-import re
+from database.db import Proxy
 
 
 # ======================================================================================================================
-
-
-def validate_domain_name(domain: str) -> bool:
-    """
-    Validates if the provided string is a structured domain name.
-
-    Args:
-    domain (str): The domain name to validate.
-
-    Returns:
-    bool: True if the domain name is valid based on structure, False otherwise.
-    """
-    pattern = r"^(?!-)([A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,6}$"
-
-    return bool(re.fullmatch(pattern, domain))
 
 
 def status_code_checker(domain: str) -> int | None:
@@ -38,26 +21,58 @@ def status_code_checker(domain: str) -> int | None:
         return None
 
 
+def load_proxies():
+    proxies = Proxy().proxies_list
+    proxies_final = []
+    for i in proxies:
+        ip, port, username, password = i[0].split(':')
+        proxies_final.append(f"http://{username}:{password}@{ip}:{port}")
+    return proxies_final
+
+
+def check_proxies():
+    proxies = Proxy().proxies_list
+    proxies_final_good = []
+    proxies_final_bad = []
+    for i in proxies:
+        ip, port, username, password = i[0].split(':')
+        proxy = f"http://{username}:{password}@{ip}:{port}"
+        if is_proxy_working(proxy):
+            proxies_final_good.append(i[0])
+        else:
+            proxies_final_bad.append(i[0])
+    return proxies_final_good, proxies_final_bad
+
+
+def is_proxy_working(proxy):
+    """
+    Test if the given proxy is working by attempting a GET request through the proxy.
+
+    Args:
+    proxy (str): The proxy URL.
+
+    Returns:
+    bool: True if the proxy is working, False otherwise.
+    """
+    proxies = {
+        'http': proxy,
+        'https': proxy
+    }
+    test_url = 'https://httpbin.org/ip'
+
+    try:
+        response = requests.get(test_url, proxies=proxies, timeout=10)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        return True
+    except requests.exceptions.RequestException as e:
+        print(f"Proxy failed with error: {e}")
+        return False
+
+
 # ======================================================================================================================
 
 
-def load_proxies():
-    proxies = []
-    try:
-        with open('scripts/proxy.txt', 'r') as file:
-            for line in file:
-                line = line.strip()
-                if line:
-                    ip, port, username, password = line.split(':')
-                    proxies.append(f"http://{username}:{password}@{ip}:{port}")
-    except FileNotFoundError:
-        print("The proxy file was not found.")
-    except Exception as e:
-        print(f"Failed to load proxies: {e}")
-    return proxies
-
-
-def parse_suip_biz(url, act, proxies):
+def parse_suip_biz(url, act, proxy):
     """
     Parses the given URL based on the action ('findomain' or 'subfinder') from suip.biz using a rotating proxy.
 
@@ -76,7 +91,6 @@ def parse_suip_biz(url, act, proxies):
         'url': (None, url),
         'Submit1': (None, 'Submit'),
     }
-    proxy = choice(proxies)
     proxy = {'http': proxy, 'https': proxy}
     headers = {
         "User-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36",
@@ -116,12 +130,15 @@ def get_subdomains(url: str):
     url (str): The URL to fetch subdomains for.
 
     Returns:
-    List[str] | int: Returns a list of subdomains if successful, or an HTTP status code if requests fail.
+    Returns a list of subdomains if successful, or an HTTP status code if requests fail.
     """
+    proxies = load_proxies()
+    proxy = choice(proxies)
+
     try:
         normalized_url = url.removeprefix("http://").removeprefix("https://")
-        first_subdomains_list = parse_suip_biz(normalized_url, "findomain", load_proxies())
-        second_subdomains_list = parse_suip_biz(normalized_url, "subfinder", load_proxies())
+        first_subdomains_list = parse_suip_biz(normalized_url, "findomain", proxy)
+        second_subdomains_list = parse_suip_biz(normalized_url, "subfinder", proxy)
 
         subdomains_list = set(first_subdomains_list + second_subdomains_list)
 

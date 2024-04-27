@@ -54,6 +54,12 @@ def is_proxy_working(proxy):
     Returns:
     bool: True if the proxy is working, False otherwise.
     """
+    headers = {
+        "User-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36",
+        'Accept': 'application/json',
+        'Connection': 'keep-alive',
+        'Accept-Encoding': 'gzip, deflate, br'
+    }
     proxies = {
         'http': proxy,
         'https': proxy
@@ -61,7 +67,7 @@ def is_proxy_working(proxy):
     test_url = 'https://httpbin.org/ip'
 
     try:
-        response = requests.get(test_url, proxies=proxies, timeout=10)
+        response = requests.get(test_url, proxies=proxies, headers=headers, timeout=3)
         response.raise_for_status()  # Raises an HTTPError for bad responses
         return True
     except requests.exceptions.RequestException as e:

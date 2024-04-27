@@ -78,7 +78,7 @@ def add_domain_markup(domain_name: str = None, error: bool = False):
 def proxies_menu_markup():
     markup = telebot.types.InlineKeyboardMarkup()
     proxies_good, proxies_bad = check_proxies()
-    text = f"Исправных: <b>{len(proxies_good)}</b> | Неисправных: <b>{len(proxies_bad)}</b>\n"
+    text = f"Исправных: <b>{len(proxies_good)}</b>\n"
     for count, i in enumerate(proxies_good):
         text += f"{count + 1}: <code>{i}</code>\n"
         markup.add(
@@ -86,6 +86,7 @@ def proxies_menu_markup():
             telebot.types.InlineKeyboardButton(f"✅", callback_data='none_data'),
             telebot.types.InlineKeyboardButton(f"-", callback_data=f'delete_proxy_{i}')
         )
+    text += f"Неисправных: <b>{len(proxies_bad)}\n</b>"
     for count, i in enumerate(proxies_bad):
         text += f"{count + 1}: <code>{i}</code>\n"
         markup.add(

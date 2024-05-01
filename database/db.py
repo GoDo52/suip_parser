@@ -131,7 +131,7 @@ class Domain:
             return False, None
 
         # Only add subdomains that are not already in the database
-        subdomains_to_add = new_subdomains_set - existing_subdomains
+        subdomains_to_add = set(new_subdomains_set) - set(existing_subdomains)
 
         if subdomains_to_add:
             c.executemany("INSERT INTO subdomains (domain, subdomain) VALUES (?, ?)",

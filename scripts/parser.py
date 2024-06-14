@@ -113,7 +113,7 @@ def parse_suip_biz(url, act, proxy):
     }
 
     try:
-        response = requests.post('https://suip.biz/', params=params, files=files, proxies=proxy, headers=headers)
+        response = requests.post('https://suip.biz/ru/', params=params, files=files, proxies=proxy, headers=headers)
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return 1

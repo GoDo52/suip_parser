@@ -11,6 +11,9 @@ def start_menu_markup():
 
     markup = telebot.types.InlineKeyboardMarkup()
     markup.add(
+        telebot.types.InlineKeyboardButton("Список Доменов", callback_data='list_of_all_domains_menu')
+    )
+    markup.add(
         telebot.types.InlineKeyboardButton("Домены", callback_data='domains_menu'),
         telebot.types.InlineKeyboardButton("Добавить Домен", callback_data='add_domain')
     )
@@ -22,7 +25,7 @@ def start_menu_markup():
     return markup, text
 
 
-def domains_menu_markup(domains_list: list = None):
+def domains_menu_markup(domains_list: list = None, forward: int = 0, first_page: bool = True, section: int = 0):
     text = ""
     markup = telebot.types.InlineKeyboardMarkup()
     if domains_list:
@@ -31,9 +34,38 @@ def domains_menu_markup(domains_list: list = None):
         for i in domains_list:
             markup.add(
                 telebot.types.InlineKeyboardButton(f"{i[0]}", callback_data=f'show_subdomains_{i[0]}'),
-                telebot.types.InlineKeyboardButton(f"{i[1]}", callback_data=f'change_status_{i[0]}'),
+                telebot.types.InlineKeyboardButton(f"{i[1]}", callback_data=f'change_status_{section}_{i[0]}'),
                 telebot.types.InlineKeyboardButton(f"-", callback_data=f'delete_domain_{i[0]}')
             )
+    else:
+        text = "Домены"
+
+    if not first_page:
+        if forward == 1:
+            markup.add(
+                telebot.types.InlineKeyboardButton("⬅️", callback_data=f'domains_menu_previous_page_{section - 1}'),
+                telebot.types.InlineKeyboardButton("➡️", callback_data=f'domains_menu_next_page_{section + 1}'),
+            )
+        else:
+            markup.add(
+                telebot.types.InlineKeyboardButton("⬅️", callback_data=f'domains_menu_previous_page_{section - 1}')
+            )
+    else:
+        if forward == 1:
+            markup.add(
+                telebot.types.InlineKeyboardButton("➡️", callback_data=f'domains_menu_next_page_{section + 1}')
+            )
+
+    markup.add(telebot.types.InlineKeyboardButton("Назад", callback_data='back_to_start_menu'))
+    return markup, text
+
+
+def all_domains_menu_markup(domains_list: list = None):
+    text = ""
+    markup = telebot.types.InlineKeyboardMarkup()
+    if domains_list:
+        for i in domains_list:
+            text += f"http://{i[0]} \n"
     else:
         text = "Домены"
 

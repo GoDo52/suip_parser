@@ -52,13 +52,38 @@ def init_db(conn, force: bool = False):
 
 
 @ensure_connection
-def get_all_domains(conn, notification_true: bool = False):
+def get_all_domains(conn, section: int = 1, notification_true: bool = False):
     c = conn.cursor()
     if notification_true:
         domains = c.execute("SELECT domain FROM domains WHERE notification_status = ?", (1, )).fetchall()
         return domains
 
     domains = c.execute("SELECT domain, notification_status FROM domains").fetchall()
+    if section == 1:
+        domains_section = domains[:7]
+    elif section == 0:
+        domains_section = domains[-7:]
+    else:
+        offset = 1 * 7 * (section - 1)
+        domains_section = domains[offset:offset+7]
+
+    if domains_section[-1] == domains[-1]:
+        forward = 0
+    else:
+        forward = 1
+
+    if domains_section[0] == domains[0]:
+        first_page = True
+    else:
+        first_page = False
+
+    return domains_section, forward, first_page
+
+
+@ensure_connection
+def get_all_domains_list(conn):
+    c = conn.cursor()
+    domains = c.execute("SELECT domain FROM domains").fetchall()
     return domains
 
 

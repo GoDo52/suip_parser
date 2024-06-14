@@ -5,7 +5,7 @@ from threading import Thread
 
 from handlers.markups import *
 
-from database.db import Domain, get_all_domains, Proxy
+from database.db import Domain, get_all_domains, get_all_domains_list, Proxy
 
 from scripts.parser import get_subdomains
 
@@ -111,9 +111,22 @@ def start_menu_logic(message, inline: bool = False):
     bot_message(message, start_menu_markup(), inline)
 
 
-def domains_menu_logic(message, inline: bool = False):
-    domains_list = get_all_domains()
-    bot_message(message, domains_menu_markup(domains_list=domains_list), inline)
+def domains_menu_logic(message, section: int = 1, inline: bool = False):
+    domains_list, forward, first_page = get_all_domains(section=int(section))
+    bot_message(
+        message,
+        domains_menu_markup(domains_list=domains_list, forward=forward, first_page=first_page, section=int(section)),
+        inline
+    )
+
+
+def all_domains_menu_logic(message, inline: bool = False):
+    domains_list = get_all_domains_list()
+    bot_message(
+        message,
+        all_domains_menu_markup(domains_list=domains_list),
+        inline
+    )
 
 
 def subdomains_menu_logic(message, domain_name: str, inline: bool = False):
@@ -144,16 +157,16 @@ def add_domain(message, inline: bool = False):
     bot_message(message, start_menu_markup(), inline)
 
 
-def delete_domain_logic(message, domain_name: str, inline: bool = False):
+def delete_domain_logic(message, domain_name: str, inline: bool = True):
     domain = Domain(domain_name)
     domain.delete_domain()
-    domains_menu_logic(message, inline)
+    domains_menu_logic(message, inline=inline)
 
 
-def update_domain_status_logic(message, domain_name: str, inline: bool = False):
+def update_domain_status_logic(message,domain_name: str,  section: int = 1, inline: bool = True):
     domain = Domain(domain_name)
     domain.change_domain_status()
-    domains_menu_logic(message, inline)
+    domains_menu_logic(message, section=section, inline=inline)
 
 
 # ======================================================================================================================

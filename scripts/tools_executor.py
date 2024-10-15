@@ -67,7 +67,7 @@ def get_subdomains(url: str):
         # Filter the raw subdomains to include only valid subdomains
         valid_subdomains_list = filter_subdomains(raw_subdomains_list)
 
-        return list(valid_subdomains_list)
+        return set(valid_subdomains_list)
 
     except Exception as e:
         print(f'An error occurred: {e}')

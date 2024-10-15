@@ -7,7 +7,7 @@ from handlers.markups import *
 
 from database.db import Domain, get_all_domains, get_all_domains_list, Proxy
 
-from scripts.parser import get_subdomains
+from scripts.tools_executor import get_subdomains
 
 from config import ADMIN_ID_LIST
 

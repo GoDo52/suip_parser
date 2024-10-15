@@ -1,4 +1,5 @@
 import subprocess
+import re
 
 def execute_command(command):
     """
@@ -18,6 +19,24 @@ def execute_command(command):
         print(f"Error executing command: {e}")
         return []
 
+def filter_subdomains(subdomains_list):
+    """
+    Filters the subdomain list to only include valid subdomain names.
+    
+    Args:
+    subdomains_list (list): A list of raw subdomain data.
+
+    Returns:
+    list: A filtered list of valid subdomains.
+    """
+    # Regular expression pattern to match valid subdomains
+    subdomain_pattern = re.compile(r'^(?:[a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$')
+
+    # Filter the list to include only valid subdomains
+    valid_subdomains = [sub for sub in subdomains_list if subdomain_pattern.match(sub)]
+
+    return valid_subdomains
+
 def get_subdomains(url: str):
     """
     Retrieves subdomains using amass, subfinder, and findomain by executing their respective commands.
@@ -26,7 +45,7 @@ def get_subdomains(url: str):
     url (str): The domain to fetch subdomains for.
     
     Returns:
-    list: A combined set of unique subdomains.
+    list: A combined set of unique and valid subdomains.
     """
     try:
         # Normalize the URL (remove 'http://', 'https://')
@@ -43,10 +62,12 @@ def get_subdomains(url: str):
         findomain_output = execute_command(findomain_command)
 
         # Combine and deduplicate the results
-        subdomains_list = set(amass_output + subfinder_output + findomain_output)
+        raw_subdomains_list = set(amass_output + subfinder_output + findomain_output)
 
-        print(subdomains_list)
-        return list(subdomains_list)
+        # Filter the raw subdomains to include only valid subdomains
+        valid_subdomains_list = filter_subdomains(raw_subdomains_list)
+
+        return list(valid_subdomains_list)
 
     except Exception as e:
         print(f'An error occurred: {e}')

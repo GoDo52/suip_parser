@@ -34,6 +34,7 @@ def filter_subdomains(subdomains_list):
 
     # Filter the list to include only valid subdomains
     valid_subdomains = [sub for sub in subdomains_list if subdomain_pattern.match(sub)]
+    valid_subdomains = [sub.removeprefix("http://").removeprefix("https://") for sub in valid_subdomains]
 
     return valid_subdomains
 

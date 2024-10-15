@@ -3,6 +3,7 @@ __pycache__/
 venv/
 
 database/database.db
+database/DataBase.db
 .env
 
 README.md

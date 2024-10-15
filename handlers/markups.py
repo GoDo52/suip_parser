@@ -83,7 +83,7 @@ def subdomains_menu_markup(domain_name: str, subdomains_list: list | set, new: b
     if subdomains_list:
         for i in subdomains_list:
             status_code = status_code_checker(domain=i)
-            text += f"http://{i} | {status_code} \n"
+            text += f"{i} | {status_code} \n"
 
     markup.add(telebot.types.InlineKeyboardButton("Назад", callback_data='domains_menu'))
     return markup, text

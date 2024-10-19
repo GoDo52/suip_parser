@@ -58,7 +58,7 @@ def get_all_domains(conn, section: int = 1, notification_true: bool = False):
         domains = c.execute("SELECT domain FROM domains WHERE notification_status = ?", (1, )).fetchall()
         return domains
 
-    domains = c.execute("SELECT domain, notification_status FROM domains").fetchall()[-1]
+    domains = c.execute("SELECT domain, notification_status FROM domains").fetchall()[-1:]
     if section == 1:
         domains_section = domains[:7]
     elif section == 0:
